@@ -8,7 +8,7 @@ def extractNums(processedText):
         
 def extractDates(processedText):    
     datesArr = re.findall(r" «? ?\d{1,2} ?»?[^0-9/]{1,2}(?:января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря|(?:0[1-9]|1[0-2]))[^0-9/]{1,2}(?:(?:19|20)\d{2}|[89012]\d)", processedText)
-    return [[date] for date in datesArr]
+    return [[date.strip()] for date in datesArr]
 
                 
 def extractOrgs(markup):  
