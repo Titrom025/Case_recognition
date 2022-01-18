@@ -2,7 +2,7 @@ import re
 
 def extractNums(processedText):    
     actNumbers = re.findall(r"№ ?[^ /,\n][^ ,\n]+", processedText)
-    actNumbers = list(filter(lambda number: len(re.sub(r"[№ от]", r"", number)) > 0, actNumbers))
+    actNumbers = list(filter(lambda number: len(re.sub(r"[№ от]", r"", number)) > 3, actNumbers))
     return [[num] for num in actNumbers]
         
         
@@ -62,3 +62,8 @@ def extractPersons(processedText, markup):
         personsArr.append(person.split(" "))
 
     return personsArr
+
+
+def extractDebtors(processedText):
+  debtors = re.findall(r"должник[^А-Я]{1,5}([А-Я][^А-Я]{1,20}[А-Я][^А-Я]{1,15}[А-Я][^., ;]{1,15})", processedText)
+  return [debtor.split(' ') for debtor in debtors]
