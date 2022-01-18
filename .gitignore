@@ -1,0 +1,8 @@
+*.pdf
+*.jpg
+*.xml
+*.zip
+.DS_Store
+*checkpoint.ipynb
+*.pyc
+caseRecognition_old.ipynb
