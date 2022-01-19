@@ -53,7 +53,7 @@ def extractOrgs(markup):
 
 def extractMoney(processedText):
   moneyArr = re.findall(r"\d{0,3}[ \']*\d{0,3}[ \']*\d{1,3}[,.]?\d{0,2} *(?:[Рр][Уу][Бб])", processedText)
-  return [re.split(r' *[Рр][Уу][Бб]', money)[:-1] + re.findall(r'[Рр][Уу][Бб]', money) for money in moneyArr]
+  return [re.split(r' *[Рр][Уу][Бб]', money.strip())[:-1] + re.findall(r'[Рр][Уу][Бб]', money) for money in moneyArr]
 
       
 def extractPersons(processedText, markup):    
