@@ -42,14 +42,8 @@ def handlePassport(objects, im_height):
 					and series_obj["bbox"][0] - num_obj["bbox"][2] > 1500):
 				passport_series_objs[series_index]['field_type'] = 'PassportSeries'
 				passport_nums_objs[num_index]['field_type'] = 'PassportNum'
-				print(passport_series_objs[series_index]['bbox'])
-				print(passport_nums_objs[num_index]['bbox'])
 				return [passport_series_objs[series_index], passport_nums_objs[num_index]]
 
-	# passport_series_objs = list(filter(lambda obj: (obj['field_type'] == 'PassportSeries'), passport_series_objs))
-	# passport_nums_objs = list(filter(lambda obj: (obj['field_type'] == 'PassportNum'), passport_nums_objs))
-
-	# print(passport_series_objs + passport_nums_objs)
 	return []
 
  

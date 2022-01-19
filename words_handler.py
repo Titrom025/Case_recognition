@@ -1,4 +1,4 @@
-import pdfminer
+from pdfminer.layout import LTChar, LTTextBoxHorizontal
 import re
 
 DPI_SCALE = 4.17
@@ -12,7 +12,7 @@ def draw_words(first_line_index, last_line_index, words, text_lines,
     first_line = text_lines[first_line_index]
     chars = []
     for elem in first_line._objs:
-      if isinstance(elem, pdfminer.layout.LTChar):
+      if isinstance(elem, LTChar):
         chars.append(elem)    
     first_line._objs = chars
     first_line_text = first_line.get_text()
@@ -44,7 +44,7 @@ def draw_words(first_line_index, last_line_index, words, text_lines,
     first_line = text_lines[first_line_index]
     chars = []
     for elem in first_line._objs:
-      if isinstance(elem, pdfminer.layout.LTChar):
+      if isinstance(elem, LTChar):
         chars.append(elem)    
     first_line._objs = chars
     first_line_text = first_line.get_text()
@@ -63,7 +63,7 @@ def draw_words(first_line_index, last_line_index, words, text_lines,
       last_line = text_lines[last_line_index]
       chars = []
       for elem in last_line._objs:
-        if isinstance(elem, pdfminer.layout.LTChar):
+        if isinstance(elem, LTChar):
           chars.append(elem)    
       last_line._objs = chars
       last_line_text = last_line.get_text()
@@ -83,7 +83,7 @@ def draw_words(first_line_index, last_line_index, words, text_lines,
         middle_line = text_lines[middle_line_index]
         chars = []
         for elem in middle_line._objs:
-          if isinstance(elem, pdfminer.layout.LTChar):
+          if isinstance(elem, LTChar):
             chars.append(elem)    
         middle_line._objs = chars
 
@@ -109,7 +109,7 @@ def highLightWords(words, text_lines, drawn_boxes, xmls_boxes, pageNum,
     first_line = text_lines[first_line_index]
     chars = []
     for elem in first_line._objs:
-      if isinstance(elem, pdfminer.layout.LTChar):
+      if isinstance(elem, LTChar):
         chars.append(elem)    
         
     first_line._objs = chars
@@ -139,7 +139,7 @@ def highLightWords(words, text_lines, drawn_boxes, xmls_boxes, pageNum,
     
       chars = []
       for elem in line._objs:
-        if isinstance(elem, pdfminer.layout.LTChar):
+        if isinstance(elem, LTChar):
           chars.append(elem)    
           
       line._objs = chars
@@ -189,7 +189,7 @@ def drawElement(x0, y0, x1, y1, text_value, drawn_boxes, xmls_boxes, pageNum,
 def parse_obj(lt_objs, text_lines_to_handle):
 	rawText = ''
 	for text_box in lt_objs:
-		if isinstance(text_box, pdfminer.layout.LTTextBoxHorizontal):
+		if isinstance(text_box, LTTextBoxHorizontal):
 			for line in sorted(text_box._objs, key=lambda obj: obj.y1, reverse=True):
 				text = line.get_text()
 				if len(text) > 5:
