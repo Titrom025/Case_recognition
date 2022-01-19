@@ -14,11 +14,11 @@ def extractNums(processedText):
   return [[num] for num in actNumbers]
 
 def extractPassportSeries(processedText):    
-  passport_series = re.findall(r"[№ ]\d{4} ", processedText)
+  passport_series = re.findall(r"[№ ](\d{2} ?\d{2})[ ,\-№]", processedText)
   return [[series] for series in passport_series]
 
 def extractPassportNums(processedText):    
-  passport_nums = re.findall(r"[№ ]\d{6}[ ,.]", processedText)
+  passport_nums = re.findall(r"[№\- ](\d{6})[ ,.]", processedText)
   return [[series] for series in passport_nums]
         
         
@@ -52,7 +52,6 @@ def extractOrgs(markup):
 
 
 def extractMoney(processedText):
-  # moneyArr = re.findall(r"\d{1,3}[ \-\']?\d{1,3}[ \-\']?\d{1,3}[,.]\d{2}? *(?:[Рр][Уу][Бб])?", processedText)
   moneyArr = re.findall(r"\d{0,3}[ \']*\d{0,3}[ \']*\d{1,3}[,.]?\d{0,2} *(?:[Рр][Уу][Бб])", processedText)
   return [re.split(r' *[Рр][Уу][Бб]', money)[:-1] + re.findall(r'[Рр][Уу][Бб]', money) for money in moneyArr]
 
