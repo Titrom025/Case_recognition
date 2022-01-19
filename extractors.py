@@ -18,7 +18,7 @@ def extractDates(processedText):
   datesArr = re.findall(r" «? ?\d{1,2} ?»?[^0-9/]{1,2}(?:января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря|(?:0[1-9]|1[0-2]))[^0-9/]{1,2}(?:(?:19|20)\d{2}|[89012]\d)", processedText)
   return [[date.strip()] for date in datesArr]
 
-                
+ORGS_BLACK_LIST = ['ирово', 'уфмс', 'суд', 'бик', 'район', 'банк', 'именем', 'дело', 'северо'] 
 def extractOrgs(markup):  
   orgsArr = []
   personsArr = []
@@ -30,7 +30,13 @@ def extractOrgs(markup):
         personsArr.append(org.split(' '))
       else:
         org_s = org.lower()
-        if not ('ирово' in org_s or 'уфмс' in org_s or 'суд' in org_s or 'бик' in org_s or 'район' in org_s or 'банк' in org_s or 'именем' in org_s or 'дело' in org_s):
+        correct_org = True
+        for word in ORGS_BLACK_LIST:
+          if word in org_s:
+            correct_org = False
+            break
+
+        if correct_org:
           orgsArr.append(org.split(' '))
 
   return orgsArr, personsArr
