@@ -23,8 +23,9 @@ def extractOrgs(markup):
   orgsArr = []
   personsArr = []
   for span in markup.spans:
-    if span.type == "ORG" and span.stop - span.start > 5:
+    if span.type == "ORG" and span.stop - span.start > 10:
       org = markup.text[span.start:span.stop]
+      org = re.sub(r"  +", r" ", org)
       org = org.strip()
       if (len(org.split(' ')) == 1):
         personsArr.append(org.split(' '))
