@@ -1,4 +1,23 @@
 import re
+import os
+
+def get_files(dirpath, ext):
+  files = [s for s in os.listdir(dirpath)
+     if os.path.isfile(os.path.join(dirpath, s)) and os.path.splitext(s)[1] == ext]
+  files.sort()
+  return files
+
+
+def createDir(dirpath, ext):
+  if os.path.exists(dirpath):
+    for file in get_files(dirpath, ext):
+      os.remove(os.path.join(dirpath, file))
+  else:
+    os.mkdir(dirpath)
+    
+def createDirIfNotExist(dirpath):
+  if not os.path.exists(dirpath):
+    os.mkdir(dirpath)
 
 def checkSimilarity(string1, string2, similarity=0.8):
 	string1_normal = re.sub(r"[ .,]", r"", string1)

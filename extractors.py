@@ -12,6 +12,14 @@ def extractNums(processedText):
   actNumbers = re.findall(r"№ ?[^ /,\n][^ ,\n]+", processedText)
   actNumbers = list(filter(lambda number: len(re.sub(r"[№ от]", r"", number)) > 3, actNumbers))
   return [[num] for num in actNumbers]
+
+def extractPassportSeries(processedText):    
+  passport_series = re.findall(r"[№ ]\d{4} ", processedText)
+  return [[series] for series in passport_series]
+
+def extractPassportNums(processedText):    
+  passport_nums = re.findall(r"[№ ]\d{6}[ ,.]", processedText)
+  return [[series] for series in passport_nums]
         
         
 def extractDates(processedText):    
