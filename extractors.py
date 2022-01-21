@@ -1,13 +1,5 @@
 import re
 
-from natasha import (
-    MorphVocab,
-    AddrExtractor,
-)
-
-morph_vocab = MorphVocab()
-addr_extractor = AddrExtractor(morph_vocab)
-
 def extractNums(processedText):    
   actNumbers = re.findall(r"№ ?[^ /,\n][^ ,\n]+", processedText)
   actNumbers = list(filter(lambda number: len(re.sub(r"[№ от]", r"", number)) > 3, actNumbers))
@@ -97,39 +89,3 @@ def extractPersons(processedText, markup):
 def extractDebtors(processedText):
   debtors = re.findall(r"должник[^А-Я]{1,5}([А-Я][^А-Я]{1,20}[А-Я][^А-Я]{1,15}[А-Я][^., ;]{1,15})", processedText)
   return [debtor.split(' ') for debtor in debtors]
-
-
-def extractAddresses(text_lines):   
-    adresses = [] 
-    print("\nAddresses:")
-    for i in range(len(text_lines) - 1):
-        textBox = text_lines[i]
-        text = textBox.get_text()
-        address1 = addr_extractor.find(text)
-        if address1 is not None:
-            address1words = []
-            parts = address1.fact.parts
-
-            for part in parts:
-                if part.value is not None:
-                    address1words.append(part.value)
-
-            if len(address1words) == 0:
-                continue
-
-            if len(address1words) == 1 and parts[0].type != "город":
-                continue
-
-            textBoxNext = text_lines[i+1]
-            textNext = textBoxNext.get_text()
-            address2 = addr_extractor.find(text + " " + textNext)
-            if address2 is not None:
-                address2words = []
-                parts = address2.fact.parts
-
-                for part in parts:
-                    if part.value is not None:
-                        address2words.append(part.value)
-
-                print("-", ' '.join(address2words))
-                adresses.append(address2words)
