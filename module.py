@@ -63,13 +63,13 @@ def addToXML(obj, bbox, page_num):
     res_string = '  <{field_type} value="{value}" confidence="100" page="{page}" left="{x}" top="{y}" width="{w}" height="{h}"/>' \
             .format(field_type=obj['field_type'] + '_' + str(obj_postfix),
                 value=obj["text_value"].replace('"', '').replace('<', '').replace('>', ''),
-                x=bbox[2], y=bbox[1], w=bbox[2]-bbox[0], h=bbox[1]-bbox[3], page=pageNum) + '\n'
+                x=bbox[2], y=bbox[1], w=abs(bbox[2]-bbox[0]), h=abs(bbox[1]-bbox[3]), page=pageNum) + '\n'
 
   xml.write(res_string)
 
                                
 def saveToXML(objects, docName, images, xml, maxPageNum, processedText, text_lines, drawnBoxes, xmlsBoxes, border_colors):  
-  font = ImageFont.truetype("Arsenal-Regular.otf", 20)
+  # font = ImageFont.truetype("Arsenal-Regular.otf", 20)
 
   unique_values = set()
   objects = [o for o in objects
@@ -86,7 +86,7 @@ def saveToXML(objects, docName, images, xml, maxPageNum, processedText, text_lin
   
   for page_num in range(0, maxPageNum):
     im_height = images[page_num].size[1]
-    image_drawer = ImageDraw.Draw(images[page_num])
+    # image_drawer = ImageDraw.Draw(images[page_num])
     
     for obj in objects:
       if obj["pageNum"] != page_num:
@@ -95,17 +95,17 @@ def saveToXML(objects, docName, images, xml, maxPageNum, processedText, text_lin
       bbox = (obj["bbox"][0], int(im_height - obj["bbox"][1] - page_num * 10000),
           obj["bbox"][2], int(im_height - obj["bbox"][3] - page_num * 10000))
 
-      image_drawer.rectangle((bbox[0], bbox[1], bbox[2], bbox[3] + random.randint(2, 10)), 
-                  outline=border_colors[obj['field_type']], width=3)
+      # image_drawer.rectangle((bbox[0], bbox[1], bbox[2], bbox[3] + random.randint(2, 10)), 
+      #             outline=border_colors[obj['field_type']], width=3)
       
-      image_drawer.rectangle((bbox[0], bbox[3], bbox[2], bbox[3]-20), fill="white")
+      # image_drawer.rectangle((bbox[0], bbox[3], bbox[2], bbox[3]-20), fill="white")
 
-      image_drawer.text((bbox[0], bbox[3]-20), obj['field_type'] + " | " + obj["text_value"], 
-                font = font, fill=border_colors[obj['field_type']])
+      # image_drawer.text((bbox[0], bbox[3]-20), obj['field_type'] + " | " + obj["text_value"], 
+      #           font = font, fill=border_colors[obj['field_type']])
 
       addToXML(obj, bbox, page_num)
       
-    images[page_num].save("results/" + docName + "_" + str(page_num) + ".jpg", "JPEG")
+    # images[page_num].save("results/" + docName + "_" + str(page_num) + ".jpg", "JPEG")
     
 
 # %%
@@ -115,11 +115,11 @@ if __name__ == '__main__':
     config = json.load(f)
 
   XML_FORMAT = config['XML_FORMAT']
-  # XML_FORMAT = 'NamedResult'
-  # XML_FORMAT = 'idcard'
+  XML_OUTPUT_DIR = config['XML_OUTPUT_DIR']
+  PDF_INPUT_DIR = config['PDF_INPUT_DIR']
 
   MODEL_NAME = 'model'
-  PDF_PATH = "input/"
+  PDF_INPUT_DIR
   HANDLED_PATH = "handled/"
   SLEEP_TIME = 5
 
@@ -142,31 +142,30 @@ if __name__ == '__main__':
   la_params.line_margin = 1.6
   la_params.boxes_flow = 0.5
 
-  createDirIfNotExist(PDF_PATH)
+  createDirIfNotExist(PDF_INPUT_DIR)
   createDirIfNotExist(HANDLED_PATH)
-  createDir("results/", ".jpg")
-  createDir("xmls/", ".xml")
+  createDir(XML_OUTPUT_DIR, ".xml")
 
   navec = Navec.load('vocab.tar')
   ner = NER.load(MODEL_NAME + '.tar')
   ner.navec(navec)
 
   while True:
-    for doc_name in get_files(PDF_PATH, ".pdf"):
-      images = convert_from_path(PDF_PATH + doc_name, dpi = STANDART_DPI * DPI_SCALE)
+    for doc_name in get_files(PDF_INPUT_DIR, ".pdf"):
+      images = convert_from_path(os.path.join(PDF_INPUT_DIR, doc_name), dpi = STANDART_DPI * DPI_SCALE)
 
-      fp = open(PDF_PATH + doc_name, 'rb')
+      fp = open(os.path.join(PDF_INPUT_DIR, doc_name), 'rb')
       parser = PDFParser(fp)
       document = PDFDocument(parser)
       
-      xml = io.open("xmls/" + doc_name.replace('.pdf', '') + ".xml", "w", encoding="utf-8")
+      xml = io.open(os.path.join(XML_OUTPUT_DIR, doc_name.replace('.pdf', '') + ".xml"), "w", encoding="utf-8")
 
       if XML_FORMAT == 'NamedResult':
         xml.write(
 """<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfResultModel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ResultModel>
-    <DocClass>Russian Marriage Certificate</DocClass>
+    <DocClass>Recognition of court orders</DocClass>
     <PagesOnOriginalImage>
       <int>{pages_count}</int>
     </PagesOnOriginalImage>
@@ -242,8 +241,11 @@ if __name__ == '__main__':
       xml.close()
 
       fp.close()
-      move(PDF_PATH + doc_name, HANDLED_PATH + doc_name)
+      move(os.path.join(PDF_INPUT_DIR, doc_name), os.path.join(HANDLED_PATH, doc_name))
 
     time.sleep(SLEEP_TIME)
+
+# %%
+
 
 

@@ -1,0 +1,1 @@
+"XML_FORMAT": "idcard" || "XML_FORMAT": "NamedResult"

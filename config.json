@@ -1,3 +1,5 @@
 {
-	"XML_FORMAT": "idcard"
+	"XML_FORMAT": "NamedResult",
+	"XML_OUTPUT_DIR": "xmls",
+	"PDF_INPUT_DIR": "input"
 }
