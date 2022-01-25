@@ -56,19 +56,21 @@ def addToXML(obj, bbox, page_num):
           <Confidence>99</Confidence>
         </Result>
       </NamedResult>
-""".format(title=obj['field_type'] + '_' + str(obj_postfix), x=bbox[0], y=bbox[1], 
-                               w=bbox[0]-bbox[2], h=bbox[1]-bbox[3], 
-                               page_num=page_num, text=obj['text_value'])
+""".format(title=obj['field_type'] + '_' + str(obj_postfix), x=bbox[0], y=bbox[3], 
+                               w=abs(bbox[2]-bbox[0]), h=abs(bbox[1]-bbox[3]), 
+                               page_num=page_num + 1, text=obj['text_value'])
   else:                
     res_string = '  <{field_type} value="{value}" confidence="100" page="{page}" left="{x}" top="{y}" width="{w}" height="{h}"/>' \
             .format(field_type=obj['field_type'] + '_' + str(obj_postfix),
                 value=obj["text_value"].replace('"', '').replace('<', '').replace('>', ''),
-                x=bbox[2], y=bbox[1], w=abs(bbox[2]-bbox[0]), h=abs(bbox[1]-bbox[3]), page=pageNum) + '\n'
+                x=bbox[0], y=bbox[3], w=abs(bbox[2]-bbox[0]), h=abs(bbox[1]-bbox[3]), page=page_num + 1) + '\n'
 
   xml.write(res_string)
 
                                
 def saveToXML(objects, docName, images, xml, maxPageNum, processedText, text_lines, drawnBoxes, xmlsBoxes, border_colors):  
+  global records
+  records = {}
   # font = ImageFont.truetype("Arsenal-Regular.otf", 20)
 
   unique_values = set()
@@ -143,6 +145,7 @@ if __name__ == '__main__':
   la_params.boxes_flow = 0.5
 
   createDirIfNotExist(PDF_INPUT_DIR)
+  # createDirIfNotExist("results/")
   createDirIfNotExist(HANDLED_PATH)
   createDir(XML_OUTPUT_DIR, ".xml")
 

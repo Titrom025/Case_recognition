@@ -1,1 +1,8 @@
-"XML_FORMAT": "idcard" || "XML_FORMAT": "NamedResult"
+Config file "config.json" 
+	"XML_FORMAT":
+		- "idcard"
+		- "NamedResult"
+
+	"XML_OUTPUT_DIR": "xmls" - directory for xml results
+	"PDF_INPUT_DIR": "input" - input directory for pdf
+
